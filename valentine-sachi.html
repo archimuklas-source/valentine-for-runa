@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Valentine's Day - My Princess Sachiii</title>
+    <style>
+     
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #0d0d0d 0%, #1a0a0a 30%, #2d1515 60%, #1a0a0a 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        #overlayCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        #flowerCanvas {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 250px;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .curtain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a0505 0%, #3d1010 50%, #1a0505 100%);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .curtain.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(1.5);
+        }
+
+        .curtain-text {
+            font-size: 48px;
+            color: #ff4d6d;
+            text-shadow: 0 0 40px rgba(255, 77, 109, 0.6), 0 0 80px rgba(255, 77, 109, 0.3);
+            animation: curtainPulse 2s ease-in-out infinite;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+        }
+
+        @keyframes curtainPulse {
+            0%, 100% { transform: scale(1); text-shadow: 0 0 40px rgba(255, 77, 109, 0.6); }
+            50% { transform: scale(1.05); text-shadow: 0 0 60px rgba(255, 77, 109, 0.8), 0 0 100px rgba(255, 77, 109, 0.4); }
+        }
+
+        .main-container {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .title-section {
+            text-align: center;
+            margin-bottom: 60px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease-out 2s forwards;
+        }
+
+        .main-title {
+            font-size: 56px;
+            font-weight: 300;
+            color: #fff;
+            letter-spacing: 6px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+        }
+
+        .main-title span {
+            color: #ff4d6d;
+            font-weight: 400;
+        }
+
+        .name-display {
+            font-size: 36px;
+            color: #ffb3c1;
+            letter-spacing: 15px;
+            text-transform: uppercase;
+            animation: nameGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes nameGlow {
+            0%, 100% { text-shadow: 0 0 20px rgba(255, 179, 193, 0.5); }
+            50% { text-shadow: 0 0 40px rgba(255, 179, 193, 0.8), 0 0 60px rgba(255, 77, 109, 0.3); }
+        }
+
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .gift-section {
+            margin-bottom: 80px;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 2.5s forwards;
+        }
+
+        .gift-wrapper {
+            position: relative;
+            width: 220px;
+            height: 280px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .gift-wrapper:hover {
+            transform: scale(1.05);
+        }
+
+        .gift-lid {
+            position: absolute;
+            top: 0;
+            left: -10px;
+            width: 240px;
+            height: 50px;
+            background: linear-gradient(145deg, #ff6b6b, #ee5a5a);
+            border-radius: 8px;
+            transform-origin: top center;
+            transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 5px 20px rgba(238, 90, 90, 0.4);
+        }
+
+        .gift-wrapper.opened .gift-lid {
+            transform: rotateX(180deg) translateY(-80px);
+        }
+
+        .gift-body {
+            position: absolute;
+            top: 45px;
+            left: 10px;
+            width: 200px;
+            height: 180px;
+            background: linear-gradient(145deg, #ff8585, #ee6b6b);
+            border-radius: 8px;
+            box-shadow: 0 15px 40px rgba(238, 90, 90, 0.3);
+            overflow: hidden;
+        }
+
+        .gift-ribbon-v {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 100%;
+            background: linear-gradient(90deg, #ffd700, #ffec8b, #ffd700);
+        }
+
+        .gift-ribbon-h {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            width: 100%;
+            height: 30px;
+            background: linear-gradient(180deg, #ffd700, #ffec8b, #ffd700);
+        }
+
+        .gift-bow {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 40px;
+        }
+
+        .bow-loop {
+            position: absolute;
+            width: 35px;
+            height: 45px;
+            background: linear-gradient(145deg, #ffd700, #ffec8b);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+        }
+
+        .bow-loop.left {
+            left: 0;
+            transform: rotate(-20deg);
+            animation: bowSwayLeft 2s ease-in-out infinite;
+        }
+
+        .bow-loop.right {
+            right: 0;
+            transform: rotate(20deg);
+            animation: bowSwayRight 2s ease-in-out infinite;
+        }
+
+        .bow-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(145deg, #ffd700, #daa520);
+            border-radius: 50%;
+        }
+
+        @keyframes bowSwayLeft {
+            0%, 100% { transform: rotate(-20deg); }
+            50% { transform: rotate(-25deg); }
+        }
+
+        @keyframes bowSwayRight {
+            0%, 100% { transform: rotate(20deg); }
+            50% { transform: rotate(25deg); }
+        }
+
+        .gift-label {
+            position: absolute;
+            bottom: -45px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #fff;
+            font-size: 16px;
+            letter-spacing: 3px;
+            white-space: nowrap;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .click-hint {
+            position: absolute;
+            bottom: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #aaa;
+            font-size: 14px;
+            letter-spacing: 2px;
+            animation: hintBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes hintBounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.7; }
+            50% { transform: translateX(-50%) translateY(-10px); opacity: 1; }
+        }
+
+        .message-section {
+            max-width: 800px;
+            width: 100%;
+            opacity: 0;
+            display: none;
+            transform: translateY(50px);
+        }
+
+        .message-section.show {
+            display: block;
+            animation: messageReveal 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes messageReveal {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .bird-container {
+            position: relative;
+            height: 150px;
+            margin-bottom: 20px;
+            overflow: visible;
+        }
+
+        .bird {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .bird-path {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 100px;
+            border: 2px dashed rgba(255, 77, 109, 0.2);
+            border-radius: 50%;
+            animation: pathPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pathPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
+            50% { transform: translate(-50%, -50%) scale(1.05); opacity: 0.5; }
+        }
+
+        .message-card {
+            background: linear-gradient(145deg, #fff9fa, #fff);
+            border-radius: 20px;
+            padding: 50px;
+            position: relative;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4), 0 0 100px rgba(255, 77, 109, 0.1);
+            overflow: hidden;
+        }
+
+        .message-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #ff4d6d, #ff8fa3, #ff4d6d, transparent);
+            background-size: 200% 100%;
+            animation: borderShine 3s linear infinite;
+        }
+
+        @keyframes borderShine {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .card-decoration {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            opacity: 0.1;
+        }
+
+        .message-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .message-header h2 {
+            font-size: 32px;
+            font-weight: 400;
+            color: #ff4d6d;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        .message-content {
+            font-size: 18px;
+            line-height: 2;
+            color: #2d1515;
+            text-align: justify;
+            font-style: italic;
+        }
+
+        .message-content p {
+            margin-bottom: 25px;
+            text-indent: 40px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: paragraphFadeIn 0.8s ease-out forwards;
+        }
+
+        .message-content p:nth-child(1) { animation-delay: 4.5s; }
+        .message-content p:nth-child(2) { animation-delay: 4.7s; }
+        .message-content p:nth-child(3) { animation-delay: 4.9s; }
+        .message-content p:nth-child(4) { animation-delay: 5.1s; }
+        .message-content p:nth-child(5) { animation-delay: 5.3s; }
+        .message-content p:nth-child(6) { animation-delay: 5.5s; }
+        .message-content p:nth-child(7) { animation-delay: 5.7s; }
+        .message-content p:nth-child(8) { animation-delay: 5.9s; }
+
+        @keyframes paragraphFadeIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message-signature {
+            margin-top: 40px;
+            text-align: right;
+        }
+
+        .message-signature p {
+            font-size: 20px;
+            color: #ff4d6d;
+            font-style: italic;
+            letter-spacing: 2px;
+            opacity: 0;
+            animation: signatureAppear 1s ease-out 6.5s forwards;
+        }
+
+        @keyframes signatureAppear {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .main-title { font-size: 25px; letter-spacing: 4px; }
+            .name-display { font-size: 20px; letter-spacing: 8px; }
+            .message-card { padding: 30px 20px; }
+            .message-content { font-size: 16px; line-height: 1.8; }
+            .message-header h2 { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="curtain" id="curtain">
+        <div class="curtain-text">for sachi
+        </div>
+    </div>
+
+    <canvas id="particleCanvas"></canvas>
+    <canvas id="overlayCanvas"></canvas>
+    <canvas id="flowerCanvas"></canvas>
+
+    <div class="main-container">
+        <div class="title-section">
+            <h1 class="main-title">Happy <span>Valentine's</span> Day</h1>
+            <p class="name-display"> My Princess, Sachi Aruna</p>
+        </div>
+
+        <div class="gift-section">
+            <div class="gift-wrapper" id="giftWrapper">
+                <div class="gift-lid"></div>
+                <div class="gift-body">
+                    <div class="gift-ribbon-v"></div>
+                    <div class="gift-ribbon-h"></div>
+                </div>
+                <div class="gift-bow">
+                    <div class="bow-loop left"></div>
+                    <div class="bow-loop right"></div>
+                    <div class="bow-center"></div>
+                </div>
+                <p class="gift-label">For My Love</p>
+                <p class="click-hint">click & scroll</p>
+            </div>
+        </div>
+
+        <div class="message-section" id="messageSection">
+            <div class="bird-container">
+                <div class="bird-path"></div>
+                <canvas id="birdCanvas" width="200" height="120"></canvas>
+            </div>
+            <div class="message-card">
+                <canvas class="card-decoration" id="cardDeco"></canvas>
+                <div class="message-header">
+                    <h2>SACHI ARUNA, MY LITTLE PRINCESS! 💕</h2>
+                </div>
+                <div class="message-content">
+                    <p>
+                       hawooo wowoppp! valentine ini aku kasih kamu iniii, semoga kamu seneng yahhhh mwehehe. kamu tau ga? sama kamu tuh aku belajar buanyakk hal!! kaya belajar mencintai diri sendiri, dan masihh buanyak lagi bos XIXIXI. aku maap lagi woop, enih kosakata ku campur campur, kaya gapernah belajar b indo, emang jarang si
+                    </p>
+                    <p>
+                        WEB INI AK BUAT NYA MASIH CAMPUR TANGAN AI WOP, maapppppp bangett wop, soalna aku masi belajar dikit dikit wop. biar dibilang heker gitu wop XIXI, maap ya wowop cius ak maap.
+                    </p>
+                    <p>
+                        kamu inget ga, pas aku cerita kalo mimpiin kamu. itu experience terindah aku wop, walopun cuman mimpi, i hope that will hapen buanget. tp cuman mimpi sih, tp itu ak bahagia buanget anget pake di nget, tak jotos kamu kalo ga percaya
+                    </p>
+                    <p>
+                        pesan dari aku sayang, kamu harus lebih sering mam sayang, nanti kalo ga mam tak slentik kamu. sama kalo minum kopi jan banya banyak minimal maksimal 2 kali sehari wop #oraNgopiOraGaul, pesan dari ku itu dulu ya wop xixi.
+                    </p>
+                    <p> kamu tau ga kamu tuh wanita terkuat yang kukenal, makanya ak banyak belajar dari kamu bos.
+                        aku minta maap lop kalo aku sering bikin kamu marah,kesel DAN PERILAKU KU yang kadang freak weird. tp aku bakal ulangin sih wlekkk
+                    </p>
+            
+                    </p>
+                    <p>
+                        segitu dulu ya wopp sayang princes blup blup, I LOVEEE UU LIKE A COUPLE OF PENGUIN XIXI
+                    </p>
+                    <p>
+
+                    </p>
+                </div>
+                <div class="message-signature">
+                    <p>Yours Truly,<br>Muklas</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // PARTICLE SYSTEM
+        class Particle {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.particles = [];
+                this.resize();
+                window.addEventListener('resize', () => this.resize());
+            }
+
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+                this.init();
+            }
+
+            init() {
+                this.particles = [];
+                const count = Math.floor((this.canvas.width * this.canvas.height) / 15000);
+                
+                for (let i = 0; i < count; i++) {
+                    this.particles.push({
+                        x: Math.random() * this.canvas.width,
+                        y: Math.random() * this.canvas.height,
+                        size: Math.random() * 3 + 1,
+                        speedX: (Math.random() - 0.5) * 0.5,
+                        speedY: (Math.random() - 0.5) * 0.5 - 0.2,
+                        opacity: Math.random() * 0.5 + 0.2,
+                        hue: Math.random() * 30 + 340
+                    });
+                }
+            }
+
+            update() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                this.particles.forEach(p => {
+                    p.x += p.speedX;
+                    p.y += p.speedY;
+                    p.opacity -= 0.001;
+                    
+                    if (p.opacity <= 0) {
+                        p.x = Math.random() * this.canvas.width;
+                        p.y = this.canvas.height;
+                        p.opacity = Math.random() * 0.5 + 0.2;
+                    }
+                    
+                    this.ctx.beginPath();
+                    this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    this.ctx.fillStyle = `hsla(${p.hue}, 100%, 70%, ${p.opacity})`;
+                    this.ctx.fill();
+                });
+                
+                requestAnimationFrame(() => this.update());
+            }
+
+            start() {
+                this.init();
+                this.update();
+            }
+        }
+
+        // HEART PARTICLE SYSTEM
+        class HeartParticle {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.hearts = [];
+                this.resize();
+                window.addEventListener('resize', () => this.resize());
+            }
+
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+            }
+
+            createHeart() {
+                const x = Math.random() * this.canvas.width;
+                this.hearts.push({
+                    x: x,
+                    y: this.canvas.height + 20,
+                    size: Math.random() * 15 + 10,
+                    speedY: Math.random() * 2 + 1,
+                    speedX: (Math.random() - 0.5) * 2,
+                    opacity: 1,
+                    hue: Math.random() * 20 + 340
+                });
+            }
+
+            update() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                for (let i = this.hearts.length - 1; i >= 0; i--) {
+                    const h = this.hearts[i];
+                    h.y -= h.speedY;
+                    h.x += h.speedX;
+                    h.opacity -= 0.005;
+                    h.speedY *= 0.99;
+                    
+                    if (h.opacity <= 0 || h.y < -50) {
+                        this.hearts.splice(i, 1);
+                        continue;
+                    }
+                    
+                    this.drawHeart(h.x, h.y, h.size, h.hue, h.opacity);
+                }
+                
+                requestAnimationFrame(() => this.update());
+            }
+
+            drawHeart(x, y, size, hue, opacity) {
+                this.ctx.save();
+                this.ctx.globalAlpha = opacity;
+                this.ctx.fillStyle = `hsl(${hue}, 100%, 70%)`;
+                this.ctx.beginPath();
+                
+                const scale = size / 20;
+                this.ctx.translate(x, y);
+                this.ctx.scale(scale, scale);
+                
+                this.ctx.moveTo(0, 0);
+                this.ctx.bezierCurveTo(-10, -15, -25, -5, 0, 15);
+                this.ctx.bezierCurveTo(25, -5, 10, -15, 0, 0);
+                
+                this.ctx.fill();
+                this.ctx.restore();
+            }
+
+            start() {
+                setInterval(() => this.createHeart(), 300);
+                this.update();
+            }
+        }
+
+        // FLOWER SYSTEM
+        class Flower {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.flowers = [];
+                this.resize();
+                window.addEventListener('resize', () => this.resize());
+            }
+
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = 250;
+            }
+
+            createFlower() {
+                const x = Math.random() * this.canvas.width;
+                this.flowers.push({
+                    x: x,
+                    y: this.canvas.height + 30,
+                    size: 0,
+                    maxSize: Math.random() * 30 + 20,
+                    growthSpeed: 0.3,
+                    stemHeight: 0,
+                    maxStemHeight: Math.random() * 80 + 60,
+                    sway: 0,
+                    swaySpeed: Math.random() * 0.02 + 0.01,
+                    hue: Math.random() * 30 + 320,
+                    petals: []
+                });
+                
+                for (let i = 0; i < 6; i++) {
+                    this.flowers[this.flowers.length - 1].petals.push({
+                        angle: (i / 6) * Math.PI * 2,
+                        length: 0
+                    });
+                }
+            }
+
+            update() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                this.ctx.fillStyle = '#1a4d1a';
+                this.ctx.fillRect(0, this.canvas.height - 10, this.canvas.width, 10);
+                
+                for (let i = this.flowers.length - 1; i >= 0; i--) {
+                    const f = this.flowers[i];
+                    
+                    if (f.size < f.maxSize) {
+                        f.size += f.growthSpeed;
+                        f.petals.forEach(p => {
+                            if (p.length < f.maxSize * 0.6) {
+                                p.length += f.growthSpeed * 0.6;
+                            }
+                        });
+                    }
+                    
+                    if (f.stemHeight < f.maxStemHeight) {
+                        f.stemHeight += f.growthSpeed;
+                    }
+                    
+                    f.sway += f.swaySpeed;
+                    
+                    if (f.y < -100) {
+                        this.flowers.splice(i, 1);
+                        continue;
+                    }
+                    
+                    this.drawFlower(f);
+                }
+                
+                requestAnimationFrame(() => this.update());
+            }
+
+            drawFlower(f) {
+                const ctx = this.ctx;
+                const swayOffset = Math.sin(f.sway) * 10;
+                const x = f.x + swayOffset;
+                const y = f.y - f.stemHeight;
+                
+                ctx.beginPath();
+                ctx.moveTo(f.x, f.y);
+                ctx.quadraticCurveTo(f.x + swayOffset * 0.5, y + f.stemHeight / 2, x, y);
+                ctx.strokeStyle = '#228B22';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+                
+                ctx.fillStyle = '#2E8B2E';
+                this.drawLeaf(x - 10, y + f.stemHeight * 0.3, -30);
+                this.drawLeaf(x + 10, y + f.stemHeight * 0.5, 30);
+                
+                ctx.save();
+                ctx.translate(x, y);
+                
+                f.petals.forEach(p => {
+                    ctx.save();
+                    ctx.rotate(p.angle);
+                    ctx.fillStyle = `hsl(${f.hue}, 80%, 75%)`;
+                    ctx.beginPath();
+                    ctx.ellipse(p.length, 0, p.length * 0.4, p.length * 0.25, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                });
+                
+                ctx.fillStyle = '#FFD700';
+                ctx.beginPath();
+                ctx.arc(0, 0, f.size * 0.2, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.restore();
+            }
+
+            drawLeaf(x, y, angle) {
+                const ctx = this.ctx;
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.rotate(angle * Math.PI / 180);
+                ctx.fillStyle = '#2E8B2E';
+                ctx.beginPath();
+                ctx.ellipse(0, -15, 6, 15, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+
+            start() {
+                setInterval(() => this.createFlower(), 400);
+                this.update();
+            }
+        }
+
+        // BIRD ANIMATION - Flying around the card
+        function drawBird(canvasId, progress) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Create oval path movement
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radiusX = 80;
+            const radiusY = 40;
+            
+            const angle = progress * 0.5;
+            const x = centerX + Math.cos(angle) * radiusX;
+            const y = centerY + Math.sin(angle) * radiusY;
+            
+            // Calculate rotation to face direction of movement
+            const tangentAngle = Math.atan2(
+                Math.cos(angle) * radiusY,
+                -Math.sin(angle) * radiusX
+            );
+            
+            const wingFlap = Math.sin(progress * 15) * 8;
+            
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(tangentAngle + Math.PI / 2);
+            
+            // Bird body
+            ctx.fillStyle = '#ff6b9d';
+            ctx.beginPath();
+            ctx.ellipse(0, 0, 18, 10, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Head
+            ctx.beginPath();
+            ctx.arc(12, -4, 8, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Wing (animated)
+            ctx.fillStyle = '#ff4d7d';
+            ctx.beginPath();
+            ctx.moveTo(-2, 0);
+            ctx.quadraticCurveTo(0, -12 + wingFlap, 8, 0);
+            ctx.quadraticCurveTo(0, 5, -2, 0);
+            ctx.fill();
+            
+            // Beak
+            ctx.fillStyle = '#ffa500';
+            ctx.beginPath();
+            ctx.moveTo(18, -4);
+            ctx.lineTo(25, -2);
+            ctx.lineTo(18, 0);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Eye
+            ctx.fillStyle = '#fff';
+            ctx.beginPath();
+            ctx.arc(14, -5, 3, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = '#000';
+            ctx.beginPath();
+            ctx.arc(15, -5, 1.5, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Tail feathers
+            ctx.fillStyle = '#ff4d7d';
+            ctx.beginPath();
+            ctx.moveTo(-15, 0);
+            ctx.lineTo(-25, -6);
+            ctx.lineTo(-25, 6);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Heart carried by bird
+            const heartSize = 6 + Math.sin(progress * 10) * 2;
+            ctx.fillStyle = '#ff0000';
+            ctx.beginPath();
+            ctx.moveTo(-30, 0);
+            ctx.bezierCurveTo(-35, -5, -40, -5, -40, 0);
+            ctx.bezierCurveTo(-40, 5, -35, 5, -30, 0);
+            ctx.bezierCurveTo(-25, 5, -20, 5, -20, 0);
+            ctx.bezierCurveTo(-20, -5, -25, -5, -30, 0);
+            ctx.fill();
+            
+            // Sparkle effect around bird
+            ctx.fillStyle = '#fff';
+            const sparkleOpacity = (Math.sin(progress * 20) + 1) / 2 * 0.5;
+            ctx.globalAlpha = sparkleOpacity;
+            ctx.beginPath();
+            ctx.arc(-10, -15, 2, 0, Math.PI * 2);
+            ctx.arc(5, -12, 1.5, 0, Math.PI * 2);
+            ctx.arc(-20, 10, 1.5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+            
+            ctx.restore();
+        }
+
+        // CARD DECORATION
+        function drawCardDecoration(canvasId) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                const time = Date.now() / 1000;
+                
+                for (let i = 0; i < 5; i++) {
+                    const angle = (i / 5) * Math.PI * 2 + time;
+                    const x = 30 + Math.cos(angle) * 15;
+                    const y = 30 + Math.sin(angle) * 15;
+                    
+                    ctx.fillStyle = `hsl(340, 80%, 70%)`;
+                    ctx.beginPath();
+                    ctx.arc(x, y, 8, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                
+                ctx.fillStyle = '#FFD700';
+                ctx.beginPath();
+                ctx.arc(30, 30, 8, 0, Math.PI * 2);
+                ctx.fill();
+                
+                requestAnimationFrame(animate);
+            }
+            
+            animate();
+        }
+
+        // INITIALIZATION
+        let birdAnimationProgress = 0;
+
+        function initBirdAnimation() {
+            function animateBird() {
+                birdAnimationProgress += 0.016;
+                drawBird('birdCanvas', birdAnimationProgress);
+                requestAnimationFrame(animateBird);
+            }
+            animateBird();
+        }
+
+        function init() {
+            const particleCanvas = new Particle(document.getElementById('particleCanvas'));
+            particleCanvas.start();
+            
+            const heartParticle = new HeartParticle(document.getElementById('overlayCanvas'));
+            heartParticle.start();
+            
+            const flower = new Flower(document.getElementById('flowerCanvas'));
+            flower.start();
+            
+            initBirdAnimation();
+            drawCardDecoration('cardDeco');
+            
+            setTimeout(() => {
+                document.getElementById('curtain').classList.add('hidden');
+            }, 2500);
+            
+            document.getElementById('giftWrapper').addEventListener('click', function() {
+                if (!this.classList.contains('opened')) {
+                    this.classList.add('opened');
+                    
+                    document.querySelector('.gift-label').style.opacity = '0';
+                    document.querySelector('.click-hint').style.opacity = '0';
+                    
+                    setTimeout(() => {
+                        document.getElementById('messageSection').classList.add('show');
+                        
+                        for (let i = 0; i < 30; i++) {
+                            setTimeout(() => {
+                                heartParticle.createHeart();
+                            }, i * 100);
+                        }
+                    }, 800);
+                }
+            });
+        }
+
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>
